@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptGallery Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Auth Screen -->
+  <div id="auth-screen">
+    <div class="auth-box">
+      <h2>Admin Access</h2>
+      <p class="subtitle">Enter password to connect to server</p>
+      <form id="auth-form">
+        <input type="password" id="auth-password" placeholder="Password" required>
+        <button type="submit" class="btn">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="container" id="main-app" style="display: none;">
+    <header>
+      <h1>PromptGallery Command Center</h1>
+      <p class="subtitle">Secure server connection to Supabase</p>
+      <button class="btn-cancel" onclick="logout()" style="margin-top: 10px;">Logout</button>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="prompts">Prompts</button>
+      <button class="tab-btn" data-tab="marketplace">Marketplace</button>
+      <button class="tab-btn" data-tab="tools">Tools</button>
+      <button class="tab-btn" data-tab="resources">Resources</button>
+      <button class="tab-btn" data-tab="promo">Promo Banners</button>
+      <button class="tab-btn" data-tab="workshops">Workshops</button>
+    </div>
+
+    <!-- PROMPTS PANEL -->
+    <div id="panel-prompts" class="panel active">
+      <div class="list-view" id="list-view-prompts">
+        <div class="list-header">
+          <h2>Manage Prompts</h2>
+          <button class="btn-add" onclick="window.showForm('prompts')">+ Add New</button>
+        </div>
+        <ul class="data-list" id="list-prompts">
+          <div class="empty-state">Loading...</div>
+        </ul>
+      </div>
+
+      <div class="form-view hidden" id="form-view-prompts">
+        <div class="form-header">
+          <h2 id="form-title-prompts">Add Prompt</h2>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.fillDummyData('prompts')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
+            <button type="button" class="btn-cancel" onclick="window.showList('prompts')">Cancel</button>
+          </div>
+        </div>
+        <form id="form-prompts" data-table="prompts">
+          <input type="hidden" name="id" id="prompt-id">
+          
+          <div class="form-group">
+            <label for="prompt-title">Title</label>
+            <input type="text" id="prompt-title" name="title" required placeholder="e.g. Neon Cyberpunk Streets">
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-pack">Link to Marketplace Pack (Optional)</label>
+            <select id="prompt-pack" name="pack_id">
+              <option value="">-- No Pack (Standalone Prompt) --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-content">Primary Prompt Content <span class="tooltip-icon" data-tooltip="The main prompt text that users can copy.">i</span></label>
+            <textarea id="prompt-content" name="content" rows="3" required placeholder="The main prompt text..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-category">Category <span class="tooltip-icon" data-tooltip="e.g. Photography, Illustration, Web Design">i</span></label>
+            <select id="prompt-category" name="category" required>
+              <option value="">Loading categories...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-tags">Tags (Comma separated) <span class="tooltip-icon" data-tooltip="e.g. cyberpunk, neon, rain">i</span></label>
+            <input type="text" id="prompt-tags" name="tags" placeholder="cyberpunk, neon, rain">
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-images">Image URLs (One per line) <span class="tooltip-icon" data-tooltip="Paste high-res image URLs here. These populate the image carousel.">i</span></label>
+            <textarea id="prompt-images" name="images" rows="4" required placeholder="https://..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-examples">Example Usage / Variations (Separated by double newline) <span class="tooltip-icon" data-tooltip="If this post has multiple image variations, add their exact prompts here (one per line).">i</span></label>
+            <textarea id="prompt-examples" name="prompts" rows="5" placeholder="Variation 1...&#10;&#10;Variation 2..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-seo">SEO Description (Optional markdown) <span class="tooltip-icon" data-tooltip="The long-form description shown below the prompt. Supports basic formatting.">i</span></label>
+            <textarea id="prompt-seo" name="seo_description" rows="3" placeholder="SEO optimized description..."></textarea>
+          </div>
+
+          <button type="submit" class="btn" id="btn-submit-prompts">Save Prompt</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MARKETPLACE PANEL -->
+    <div id="panel-marketplace" class="panel">
+      <div class="list-view" id="list-view-marketplace">
+        <div class="list-header">
+          <h2>Manage Marketplace Packs</h2>
+          <button class="btn-add" onclick="window.showForm('marketplace')">+ Add New</button>
+        </div>
+        <ul class="data-list" id="list-marketplace">
+          <div class="empty-state">Loading...</div>
+        </ul>
+      </div>
+
+      <div class="form-view hidden" id="form-view-marketplace">
+        <div class="form-header">
+          <h2 id="form-title-marketplace">Add Pack</h2>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.fillDummyData('marketplace')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
+            <button type="button" class="btn-cancel" onclick="window.showList('marketplace')">Cancel</button>
+          </div>
+        </div>
+        <form id="form-marketplace" data-table="marketplace_items">
+          <input type="hidden" name="id" id="marketplace-id">
+          
+          <div class="form-group">
+            <label for="pack-title">Pack Title <span class="tooltip-icon" data-tooltip="e.g. Master AI Portrait Prompts">i</span></label>
+            <input type="text" id="pack-title" name="title" required placeholder="e.g. Master AI Portrait Prompts">
+          </div>
+          <div class="form-group">
+            <label for="pack-slug">URL Slug <span class="tooltip-icon" data-tooltip="Leave blank to auto-generate. e.g. master-ai-portrait-prompts">i</span></label>
+            <input type="text" id="pack-slug" name="slug" placeholder="e.g. master-ai-portrait-prompts">
+          </div>
+          <div class="form-group">
+            <label for="pack-description">Description <span class="tooltip-icon" data-tooltip="Short description for the marketplace card. e.g. A comprehensive collection of 500+ portrait prompts.">i</span></label>
+            <textarea id="pack-description" name="description" rows="2" required placeholder="A comprehensive collection..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="pack-tag">Tag <span class="tooltip-icon" data-tooltip="The small badge text shown on the card. e.g. Prompt Pack">i</span></label>
+            <input type="text" id="pack-tag" name="tag" value="Prompt Pack">
+          </div>
+          <div class="form-group">
+            <label for="pack-image">Thumbnail Image URL <span class="tooltip-icon" data-tooltip="The main cover image for the pack. e.g. https://images.unsplash.com/photo-123">i</span></label>
+            <input type="url" id="pack-image" name="image_url" required placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label for="pack-link">External Link <span class="tooltip-icon" data-tooltip="The checkout link (e.g. Gumroad). Acts as a fallback for older items.">i</span></label>
+            <input type="url" id="pack-link" name="link" required placeholder="https://gumroad.com/...">
+          </div>
+          <div class="form-group">
+            <label for="pack-price">Price (₹) <span class="tooltip-icon" data-tooltip="Numeric price value. e.g. 499">i</span></label>
+            <input type="number" step="0.01" id="pack-price" name="price" required placeholder="499">
+          </div>
+          <div class="form-group">
+            <label for="pack-detailed-description">Detailed Description <span class="tooltip-icon" data-tooltip="The full sales copy shown on the pack's detail page. Supports multiple paragraphs.">i</span></label>
+            <textarea id="pack-detailed-description" name="detailed_description" rows="4" placeholder="Full sales page text..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="pack-screenshots">Screenshots <span class="tooltip-icon" data-tooltip="Add one image URL per line. These populate the screenshot carousel.">i</span></label>
+            <textarea id="pack-screenshots" name="screenshots" rows="4" placeholder="https://..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="pack-why-not-buy">Why Not Buy <span class="tooltip-icon" data-tooltip="Add one bullet point reason per line.">i</span></label>
+            <textarea id="pack-why-not-buy" name="why_not_buy" rows="4" placeholder="Reason 1..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="pack-status">Status</label>
+            <select id="pack-status" name="status" required>
+              <option value="live">Live</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+          <button type="submit" class="btn" id="btn-submit-marketplace">Save Pack</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- TOOLS PANEL -->
+    <div id="panel-tools" class="panel">
+      <div class="list-view" id="list-view-tools">
+        <div class="list-header">
+          <h2>Manage Tools</h2>
+          <button class="btn-add" onclick="window.showForm('tools')">+ Add New</button>
+        </div>
+        <ul class="data-list" id="list-tools">
+          <div class="empty-state">Loading...</div>
+        </ul>
+      </div>
+
+      <div class="form-view hidden" id="form-view-tools">
+        <div class="form-header">
+          <h2 id="form-title-tools">Add Tool</h2>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.fillDummyData('tools')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
+            <button type="button" class="btn-cancel" onclick="window.showList('tools')">Cancel</button>
+          </div>
+        </div>
+        <form id="form-tools" data-table="tools_items">
+          <input type="hidden" name="id" id="tool-id">
+          
+          <div class="form-group">
+            <label for="tool-title">Tool Title <span class="tooltip-icon" data-tooltip="e.g. Prompt Optimizer">i</span></label>
+            <input type="text" id="tool-title" name="title" required placeholder="e.g. Prompt Optimizer">
+          </div>
+          <div class="form-group">
+            <label for="tool-description">Description <span class="tooltip-icon" data-tooltip="A short description of what the tool does.">i</span></label>
+            <textarea id="tool-description" name="description" rows="2" required placeholder="Clean and optimize..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="tool-tag">Tag <span class="tooltip-icon" data-tooltip="The category or badge text for the tool. e.g. Utility">i</span></label>
+            <input type="text" id="tool-tag" name="tag" value="Utility">
+          </div>
+          <div class="form-group">
+            <label for="tool-image">Image URL <span class="tooltip-icon" data-tooltip="The icon or thumbnail image URL for the tool.">i</span></label>
+            <input type="url" id="tool-image" name="image_url" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label for="tool-link">External Link <span class="tooltip-icon" data-tooltip="The URL where users can access or buy the tool.">i</span></label>
+            <input type="url" id="tool-link" name="link" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label for="tool-status">Status <span class="tooltip-icon" data-tooltip="Live items are visible on the site; drafts are hidden.">i</span></label>
+            <select id="tool-status" name="status" required>
+              <option value="live">Live</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+          <button type="submit" class="btn" id="btn-submit-tools">Save Tool</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESOURCES PANEL -->
+    <div id="panel-resources" class="panel">
+      <div class="list-view" id="list-view-resources">
+        <div class="list-header">
+          <h2>Manage Resources</h2>
+          <button class="btn-add" onclick="window.showForm('resources')">+ Add New</button>
+        </div>
+        <ul class="data-list" id="list-resources">
+          <div class="empty-state">Loading...</div>
+        </ul>
+      </div>
+
+      <div class="form-view hidden" id="form-view-resources">
+        <div class="form-header">
+          <h2 id="form-title-resources">Add Resource</h2>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.fillDummyData('resources')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
+            <button type="button" class="btn-cancel" onclick="window.showList('resources')">Cancel</button>
+          </div>
+        </div>
+        <form id="form-resources" data-table="resources_items">
+          <!-- Text ID since resources_items uses text ID instead of uuid -->
+          <div class="form-group" id="resource-id-group">
+            <label for="resource-id">ID (slug) - Cannot be changed later <span class="tooltip-icon" data-tooltip="Unique identifier used in URLs. e.g. ai-tools">i</span></label>
+            <input type="text" id="resource-id" name="id" required placeholder="e.g. ai-tools">
+          </div>
+          
+          <div class="form-group">
+            <label for="resource-title">Title <span class="tooltip-icon" data-tooltip="e.g. Free AI Generators">i</span></label>
+            <input type="text" id="resource-title" name="title" required placeholder="e.g. Free AI Generators">
+          </div>
+          <div class="form-group">
+            <label for="resource-description">Description <span class="tooltip-icon" data-tooltip="A short description of the resource section.">i</span></label>
+            <textarea id="resource-description" name="description" rows="2" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="resource-icon">Icon (Emoji) <span class="tooltip-icon" data-tooltip="A single emoji to represent the resource. e.g. 🤖">i</span></label>
+            <input type="text" id="resource-icon" name="icon" placeholder="🤖">
+          </div>
+          <div class="form-group">
+            <label for="resource-color">Theme Color <span class="tooltip-icon" data-tooltip="CSS variable or color for the resource card. e.g. var(--color-accent-cyan)">i</span></label>
+            <input type="text" id="resource-color" name="color" placeholder="var(--color-accent-cyan)">
+          </div>
+          <div class="form-group">
+            <label for="resource-count">Count Label <span class="tooltip-icon" data-tooltip="Badge indicating number of items. e.g. 24+ Tools">i</span></label>
+            <input type="text" id="resource-count" name="count" placeholder="24+ Tools">
+          </div>
+          <div class="form-group">
+            <label for="resource-image">Image URL <span class="tooltip-icon" data-tooltip="Cover or thumbnail image URL for the resource.">i</span></label>
+            <input type="url" id="resource-image" name="image_url" placeholder="https://...">
+          </div>
+          <button type="submit" class="btn" id="btn-submit-resources">Save Resource</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PROMO BANNERS PANEL -->
+    <div id="panel-promo" class="panel">
+      <div class="list-view" id="list-view-promo">
+        <div class="list-header">
+          <h2>Manage Promo Banners</h2>
+          <button class="btn-add" onclick="window.showForm('promo')">+ Add New</button>
+        </div>
+        <ul class="data-list" id="list-promo">
+          <div class="empty-state">Loading...</div>
+        </ul>
+      </div>
+
+      <div class="form-view hidden" id="form-view-promo">
+        <div class="form-header">
+          <h2 id="form-title-promo">Add Banner</h2>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.fillDummyData('promo')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
+            <button type="button" class="btn-cancel" onclick="window.showList('promo')">Cancel</button>
+          </div>
+        </div>
+        <form id="form-promo" data-table="promo_banners">
+          <input type="hidden" name="id" id="promo-id">
+          
+          <div class="form-group">
+            <label for="promo-title">Banner Title</label>
+            <input type="text" id="promo-title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label for="promo-image">Banner Image URL</label>
+            <input type="url" id="promo-image" name="image_url" required>
+          </div>
+          <div class="form-group" id="promo-id-group">
+            <label for="promo-id">ID (slug) - Cannot be changed later <span class="tooltip-icon" data-tooltip="Unique identifier. Usually 'main-banner'.">i</span></label>
+            <input type="text" id="promo-id" name="id" required placeholder="e.g. main-banner">
+          </div>
+          
+          <div class="form-group">
+            <label for="promo-title">Title <span class="tooltip-icon" data-tooltip="e.g. 50% Off Master AI Portrait Prompts">i</span></label>
+            <input type="text" id="promo-title" name="title" required placeholder="e.g. Summer Sale 50% Off">
+          </div>
+          <div class="form-group">
+            <label for="promo-description">Description <span class="tooltip-icon" data-tooltip="A catchy description for the promo banner.">i</span></label>
+            <textarea id="promo-description" name="description" rows="2" required placeholder="Get the premium pack..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="promo-button-text">Button Text <span class="tooltip-icon" data-tooltip="e.g. Claim Discount">i</span></label>
+            <input type="text" id="promo-button-text" name="button_text" placeholder="e.g. Claim Offer">
+          </div>
+          <div class="form-group">
+            <label for="promo-link">Link <span class="tooltip-icon" data-tooltip="Where the promo banner should direct the user.">i</span></label>
+            <input type="url" id="promo-link" name="link" required placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label for="promo-is-active">Is Active <span class="tooltip-icon" data-tooltip="Check to show this promo banner on the site.">i</span></label>
+            <select id="promo-is-active" name="is_active" required>
+              <option value="true">Yes - Display Banner</option>
+              <option value="false">No - Hide Banner</option>
+            </select>
+          </div>
+          <button type="submit" class="btn" id="btn-submit-promo">Save Banner</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- WORKSHOPS PANEL -->
+    <div id="panel-workshops" class="panel">
+      <div class="list-view" id="list-view-workshops">
+        <div class="list-header">
+          <h2>Manage Workshops</h2>
+          <button class="btn-add" onclick="window.showForm('workshops')">+ Add New</button>
+        </div>
+        <ul class="data-list" id="list-workshops">
+          <div class="empty-state">Loading...</div>
+        </ul>
+      </div>
+
+      <div class="form-view hidden" id="form-view-workshops">
+        <div class="form-header">
+          <h2 id="form-title-workshops">Add Workshop</h2>
+          <button class="btn-cancel" onclick="window.showList('workshops')">Cancel</button>
+        </div>
+        <form id="form-workshops" data-table="workshops">
+          <input type="hidden" name="id" id="workshop-id">
+          
+          <div class="form-group">
+            <label for="workshop-title">Title</label>
+            <input type="text" id="workshop-title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label for="workshop-topic">Topic</label>
+            <input type="text" id="workshop-topic" name="topic" required>
+          </div>
+          <div class="form-group">
+            <label for="workshop-date">Scheduled Date & Time (ISO format)</label>
+            <input type="text" id="workshop-date" name="scheduled_date" required placeholder="YYYY-MM-DDTHH:MM:SSZ">
+          </div>
+          <div class="form-group">
+            <label for="workshop-duration">Duration (Minutes)</label>
+            <input type="number" id="workshop-duration" name="duration_minutes" required>
+          </div>
+          <div class="form-group">
+            <label for="workshop-format">Format</label>
+            <input type="text" id="workshop-format" name="format">
+          </div>
+          <div class="form-group">
+            <label for="workshop-eligibility">Eligibility</label>
+            <input type="text" id="workshop-eligibility" name="eligibility">
+          </div>
+          <button type="submit" class="btn" id="btn-submit-workshops">Save Workshop</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="toast">Message goes here</div>
+
+  <!-- Load Socket.io and App Logic -->
+  <!-- Custom Confirm Modal -->
+  <div class="modal-overlay" id="confirm-modal">
+    <div class="modal-content">
+      <h3 class="modal-title" id="confirm-title">Confirm Action</h3>
+      <p class="modal-text" id="confirm-text">Are you sure you want to proceed?</p>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" id="confirm-cancel-btn">Cancel</button>
+        <button class="modal-btn modal-btn-confirm" id="confirm-ok-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
