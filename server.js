@@ -59,6 +59,180 @@ const authMiddleware = (req, res, next) => {
   next();
 };
 
+// --- SCHEMA DEFINITION & VALIDATION ---
+const schemas = {
+  collections: {
+    id: { type: 'string', required: false },
+    user_id: { type: 'string', required: true },
+    name: { type: 'string', required: true },
+    created_at: { type: 'string', required: false },
+    description: { type: 'string', required: false }
+  },
+  marketplace_items: {
+    id: { type: 'string', required: false },
+    title: { type: 'string', required: true },
+    slug: { type: 'string', required: false },
+    description: { type: 'string', required: true },
+    detailed_description: { type: 'string', required: false },
+    tag: { type: 'string', required: false },
+    image_url: { type: 'string', required: false },
+    screenshots: { type: 'array', required: false },
+    link: { type: 'string', required: false },
+    price: { type: 'number', required: false },
+    why_not_buy: { type: 'array', required: false },
+    status: { type: 'string', required: false },
+    created_at: { type: 'string', required: false }
+  },
+  orders: {
+    order_id: { type: 'string', required: true },
+    user_id: { type: 'string', required: true },
+    amount: { type: 'number', required: true },
+    currency: { type: 'string', required: false },
+    status: { type: 'string', required: false },
+    item_type: { type: 'string', required: false },
+    item_id: { type: 'string', required: true },
+    created_at: { type: 'string', required: false }
+  },
+  page_views: {
+    id: { type: 'string', required: false },
+    session_id: { type: 'string', required: true },
+    path: { type: 'string', required: true },
+    created_at: { type: 'string', required: false }
+  },
+  promo_banners: {
+    id: { type: 'string', required: false },
+    title: { type: 'string', required: true },
+    image_url: { type: 'string', required: true },
+    target_url: { type: 'string', required: true },
+    is_active: { type: 'boolean', required: false },
+    created_at: { type: 'string', required: false }
+  },
+  prompts: {
+    id: { type: 'string', required: false },
+    slug: { type: 'string', required: true },
+    title: { type: 'string', required: true },
+    content: { type: 'string', required: true },
+    prompts: { type: 'array', required: false },
+    tags: { type: 'array', required: false },
+    category: { type: 'string', required: true },
+    images: { type: 'array', required: false },
+    created_at: { type: 'string', required: false },
+    updated_at: { type: 'string', required: false },
+    seo_description: { type: 'string', required: false },
+    pack_id: { type: 'string', required: false },
+    pack_title: { type: 'string', required: false },
+    pack_image_url: { type: 'string', required: false }
+  },
+  resources_items: {
+    id: { type: 'string', required: true },
+    title: { type: 'string', required: true },
+    description: { type: 'string', required: true },
+    icon: { type: 'string', required: false },
+    color: { type: 'string', required: false },
+    count: { type: 'string', required: false },
+    image_url: { type: 'string', required: false },
+    created_at: { type: 'string', required: false }
+  },
+  tool_requests: {
+    id: { type: 'string', required: false },
+    email: { type: 'string', required: false },
+    idea_description: { type: 'string', required: true },
+    created_at: { type: 'string', required: false }
+  },
+  tools_items: {
+    id: { type: 'string', required: false },
+    title: { type: 'string', required: true },
+    description: { type: 'string', required: true },
+    tag: { type: 'string', required: false },
+    image_url: { type: 'string', required: false },
+    link: { type: 'string', required: false },
+    status: { type: 'string', required: false },
+    created_at: { type: 'string', required: false }
+  },
+  user_profiles: {
+    id: { type: 'string', required: false },
+    email: { type: 'string', required: true },
+    preferences: { type: 'array', required: false },
+    created_at: { type: 'string', required: false },
+    updated_at: { type: 'string', required: false },
+    name: { type: 'string', required: false },
+    favorites: { type: 'array', required: false }
+  },
+  user_prompts: {
+    id: { type: 'string', required: false },
+    user_id: { type: 'string', required: true },
+    collection_id: { type: 'string', required: false },
+    title: { type: 'string', required: true },
+    content: { type: 'string', required: true },
+    category: { type: 'string', required: false },
+    price: { type: 'string', required: false },
+    tags: { type: 'array', required: false },
+    created_at: { type: 'string', required: false },
+    updated_at: { type: 'string', required: false },
+    example: { type: 'string', required: false }
+  },
+  waitlist_emails: {
+    id: { type: 'string', required: false },
+    email: { type: 'string', required: true },
+    created_at: { type: 'string', required: false }
+  },
+  workshop_registrations: {
+    id: { type: 'string', required: false },
+    user_id: { type: 'string', required: true },
+    workshop_id: { type: 'string', required: true },
+    order_id: { type: 'string', required: true },
+    status: { type: 'string', required: false },
+    created_at: { type: 'string', required: false }
+  },
+  workshops: {
+    id: { type: 'string', required: false },
+    slug: { type: 'string', required: true },
+    title: { type: 'string', required: true },
+    topic: { type: 'string', required: true },
+    scheduled_date: { type: 'string', required: true },
+    duration_minutes: { type: 'number', required: true },
+    format: { type: 'string', required: false },
+    eligibility: { type: 'string', required: false },
+    fee_amount: { type: 'number', required: true },
+    invite_link_or_venue: { type: 'string', required: true }
+  }
+};
+
+const validatePayload = (table, payload, isPartial = false) => {
+  const schema = schemas[table];
+  if (!schema) return { valid: false, error: `Table '${table}' not found in schema` };
+
+  const errors = [];
+  
+  // Check for unknown fields
+  for (const key of Object.keys(payload)) {
+    if (!schema[key]) {
+      errors.push(`Unknown field '${key}' for table '${table}'`);
+    }
+  }
+
+  // Validate fields against schema
+  for (const [key, definition] of Object.entries(schema)) {
+    if (!isPartial && definition.required) {
+      if (payload[key] === undefined || payload[key] === null) {
+        errors.push(`Missing required field '${key}'`);
+        continue;
+      }
+    }
+
+    if (payload[key] !== undefined && payload[key] !== null) {
+      const val = payload[key];
+      if (definition.type === 'array' && !Array.isArray(val)) {
+        errors.push(`Field '${key}' must be an array`);
+      } else if (definition.type !== 'array' && typeof val !== definition.type) {
+        errors.push(`Field '${key}' must be of type ${definition.type}`);
+      }
+    }
+  }
+
+  return { valid: errors.length === 0, error: errors.join(', ') };
+};
+
 // --- API ROUTES ---
 
 app.use('/api', authMiddleware);
@@ -99,6 +273,11 @@ app.get('/api/data/:table', async (req, res) => {
 
 app.post('/api/data/:table', async (req, res) => {
   const { table } = req.params;
+  const validation = validatePayload(table, req.body, false);
+  if (!validation.valid) {
+    return res.status(400).json({ error: 'Validation failed: ' + validation.error });
+  }
+
   try {
     const { data, error } = await supabase.from(table).insert([req.body]).select();
     if (error) throw error;
@@ -110,6 +289,11 @@ app.post('/api/data/:table', async (req, res) => {
 
 app.put('/api/data/:table/:id', async (req, res) => {
   const { table, id } = req.params;
+  const validation = validatePayload(table, req.body, true);
+  if (!validation.valid) {
+    return res.status(400).json({ error: 'Validation failed: ' + validation.error });
+  }
+
   try {
     const { data, error } = await supabase.from(table).update(req.body).eq('id', id).select();
     if (error) throw error;

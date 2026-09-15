@@ -52,6 +52,7 @@
         <div class="form-header">
           <h2 id="form-title-prompts">Add Prompt</h2>
           <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('prompts')" style="background: var(--color-primary); color: white;">Load JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('prompts')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('prompts')">Cancel</button>
           </div>
@@ -124,6 +125,7 @@
         <div class="form-header">
           <h2 id="form-title-marketplace">Add Pack</h2>
           <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('marketplace')" style="background: var(--color-primary); color: white;">Load JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('marketplace')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('marketplace')">Cancel</button>
           </div>
@@ -199,6 +201,7 @@
         <div class="form-header">
           <h2 id="form-title-tools">Add Tool</h2>
           <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('tools')" style="background: var(--color-primary); color: white;">Load JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('tools')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('tools')">Cancel</button>
           </div>
@@ -254,6 +257,7 @@
         <div class="form-header">
           <h2 id="form-title-resources">Add Resource</h2>
           <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('resources')" style="background: var(--color-primary); color: white;">Load JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('resources')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('resources')">Cancel</button>
           </div>
@@ -310,6 +314,7 @@
         <div class="form-header">
           <h2 id="form-title-promo">Add Banner</h2>
           <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('promo')" style="background: var(--color-primary); color: white;">Load JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('promo')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('promo')">Cancel</button>
           </div>
@@ -373,7 +378,10 @@
       <div class="form-view hidden" id="form-view-workshops">
         <div class="form-header">
           <h2 id="form-title-workshops">Add Workshop</h2>
-          <button class="btn-cancel" onclick="window.showList('workshops')">Cancel</button>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('workshops')" style="background: var(--color-primary); color: white;">Load JSON</button>
+            <button class="btn-cancel" onclick="window.showList('workshops')">Cancel</button>
+          </div>
         </div>
         <form id="form-workshops" data-table="workshops">
           <input type="hidden" name="id" id="workshop-id">
@@ -401,6 +409,14 @@
           <div class="form-group">
             <label for="workshop-eligibility">Eligibility</label>
             <input type="text" id="workshop-eligibility" name="eligibility">
+          </div>
+          <div class="form-group">
+            <label for="workshop-fee">Fee Amount</label>
+            <input type="number" step="0.01" id="workshop-fee" name="fee_amount" required>
+          </div>
+          <div class="form-group">
+            <label for="workshop-invite">Invite Link or Venue</label>
+            <input type="text" id="workshop-invite" name="invite_link_or_venue" required>
           </div>
           <button type="submit" class="btn" id="btn-submit-workshops">Save Workshop</button>
         </form>
