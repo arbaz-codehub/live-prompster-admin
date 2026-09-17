@@ -72,6 +72,11 @@
             </select>
           </div>
 
+          <div class="form-group" style="display: flex; align-items: center; gap: 8px; flex-direction: row;">
+            <input type="checkbox" id="prompt-is-hidden" name="is_hidden" style="width: auto; cursor: pointer;">
+            <label for="prompt-is-hidden" style="margin-bottom: 0; cursor: pointer;">Hide Prompt Content (Premium Only) <span class="tooltip-icon" data-tooltip="Check this to lock the prompt and hide its copy buttons.">i</span></label>
+          </div>
+
           <div class="form-group">
             <label for="prompt-content">Primary Prompt Content <span class="tooltip-icon" data-tooltip="The main prompt text that users can copy.">i</span></label>
             <textarea id="prompt-content" name="content" rows="3" required placeholder="The main prompt text..."></textarea>

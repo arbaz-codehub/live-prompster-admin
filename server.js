@@ -121,7 +121,8 @@ const schemas = {
     seo_description: { type: 'string', required: false },
     pack_id: { type: 'string', required: false },
     pack_title: { type: 'string', required: false },
-    pack_image_url: { type: 'string', required: false }
+    pack_image_url: { type: 'string', required: false },
+    is_hidden: { type: 'boolean', required: false }
   },
   resources_items: {
     id: { type: 'string', required: true },

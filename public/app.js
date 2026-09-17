@@ -534,6 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data.tags = parseCommaSeparated(data.tags);
     data.images = parseNewlineSeparated(data.images);
     data.prompts = parseDoubleNewlineSeparated(data.prompts);
+    data.is_hidden = data.is_hidden === 'true' || data.is_hidden === 'on' || data.is_hidden === true;
     if (!data.seo_description) data.seo_description = null;
     
     if (data.pack_id) {
