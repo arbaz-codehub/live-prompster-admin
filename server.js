@@ -122,7 +122,10 @@ const schemas = {
     pack_id: { type: 'string', required: false },
     pack_title: { type: 'string', required: false },
     pack_image_url: { type: 'string', required: false },
-    is_hidden: { type: 'boolean', required: false }
+    is_hidden: { type: 'boolean', required: false },
+    is_sell: { type: 'boolean', required: false },
+    price: { type: 'number', required: false },
+    payment_link: { type: 'string', required: false }
   },
   resources_items: {
     id: { type: 'string', required: true },

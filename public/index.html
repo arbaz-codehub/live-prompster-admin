@@ -77,6 +77,21 @@
             <label for="prompt-is-hidden" style="margin-bottom: 0; cursor: pointer;">Hide Prompt Content (Premium Only) <span class="tooltip-icon" data-tooltip="Check this to lock the prompt and hide its copy buttons.">i</span></label>
           </div>
 
+          <div class="form-group" style="display: flex; align-items: center; gap: 8px; flex-direction: row;">
+            <input type="checkbox" id="prompt-is-sell" name="is_sell" style="width: auto; cursor: pointer;">
+            <label for="prompt-is-sell" style="margin-bottom: 0; cursor: pointer;">Sell this prompt <span class="tooltip-icon" data-tooltip="Check this to sell this prompt individually.">i</span></label>
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-price">Price (₹) <span class="tooltip-icon" data-tooltip="Numeric price value for the prompt.">i</span></label>
+            <input type="number" step="0.01" id="prompt-price" name="price" placeholder="99">
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-payment-link">Payment Link <span class="tooltip-icon" data-tooltip="External checkout URL.">i</span></label>
+            <input type="url" id="prompt-payment-link" name="payment_link" placeholder="https://gumroad.com/...">
+          </div>
+
           <div class="form-group">
             <label for="prompt-content">Primary Prompt Content <span class="tooltip-icon" data-tooltip="The main prompt text that users can copy.">i</span></label>
             <textarea id="prompt-content" name="content" rows="3" required placeholder="The main prompt text..."></textarea>

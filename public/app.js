@@ -129,7 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
       'x-admin-password': adminPassword,
       ...(options.headers || {})
     };
-    const response = await fetch(endpoint, { ...options, headers });
+    
+    // Prevent browser caching, which causes old data to overwrite local state
+    const fetchOptions = { cache: 'no-store', ...options, headers };
+    
+    const response = await fetch(endpoint, fetchOptions);
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
       throw new Error(errData.error || `HTTP ${response.status}`);
@@ -147,8 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
       titleEl.textContent = isEdit ? `Edit ${tabName}` : `Add New ${tabName}`;
     }
 
+    // Always reset form so stale checkbox states are cleared
+    document.getElementById(`form-${tabName}`).reset();
+
     if (!isEdit) {
-      document.getElementById(`form-${tabName}`).reset();
       const idInput = document.getElementById(`${tabName === 'marketplace' ? 'marketplace' : tabName.replace(/s$/, '')}-id`);
       if (idInput) idInput.value = '';
       
@@ -288,7 +294,10 @@ document.addEventListener('DOMContentLoaded', () => {
         prompts: "A futuristic cyberpunk city street, neon lights, raining, daytime.\nA futuristic cyberpunk city street, neon lights, raining, nighttime.",
         images: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=800\nhttps://images.unsplash.com/photo-1552058544-f2b08422138a?w=800",
         tags: "cyberpunk, neon, rain, futuristic",
-        seo_description: "Explore the gritty, neon-lit streets of a futuristic cyberpunk city.\n\n- Highly detailed textures\n- Cinematic lighting\n- 8k resolution"
+        seo_description: "Explore the gritty, neon-lit streets of a futuristic cyberpunk city.\n\n- Highly detailed textures\n- Cinematic lighting\n- 8k resolution",
+        is_sell: true,
+        price: 9.99,
+        payment_link: "https://gumroad.com/example"
       },
       marketplace: {
         title: "Master AI Portrait Prompts",
@@ -390,8 +399,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       await apiFetch(`/api/data/${tableName}/${id}`, { method: 'DELETE' });
+      
+      // Update local state instantly
+      loadedData[tabName] = loadedData[tabName].filter(i => i.id !== id && i.id !== parseInt(id));
+      renderList(tabName);
+      
       showToast('Item deleted successfully.');
-      // The socket event will trigger a reload automatically!
+      // The socket event will also trigger a reload automatically in the background
     } catch (err) {
       console.error('Delete error:', err);
       showToast(`Error deleting item: ${err.message}`, 'error');
@@ -501,23 +515,37 @@ document.addEventListener('DOMContentLoaded', () => {
           data = processDataCallback(data, tabName);
         }
 
+        let responseData;
         if (itemId && tabName !== 'resources' || (itemId && tabName === 'resources' && document.getElementById('resource-id').readOnly)) {
           // UPDATE
-          await apiFetch(`/api/data/${tableName}/${itemId}`, {
+          responseData = await apiFetch(`/api/data/${tableName}/${itemId}`, {
             method: 'PUT',
             body: JSON.stringify(data)
           });
+          
+          if (responseData && responseData.length > 0) {
+            const index = loadedData[tabName].findIndex(i => i.id === itemId || i.id === parseInt(itemId));
+            if (index !== -1) {
+              loadedData[tabName][index] = responseData[0];
+            }
+          }
         } else {
           // INSERT
-          await apiFetch(`/api/data/${tableName}`, {
+          responseData = await apiFetch(`/api/data/${tableName}`, {
             method: 'POST',
             body: JSON.stringify(data)
           });
+          
+          if (responseData && responseData.length > 0) {
+            loadedData[tabName].unshift(responseData[0]);
+          }
         }
+        
+        renderList(tabName);
 
         showToast(`Success! Saved to ${tableName}`);
         window.showList(tabName);
-        // The socket event will trigger the data reload automatically!
+        // The socket event will also trigger the data reload automatically in the background
       } catch (err) {
         console.error('Save error:', err);
         showToast(`Error: ${err.message}`, 'error');
@@ -535,6 +563,8 @@ document.addEventListener('DOMContentLoaded', () => {
     data.images = parseNewlineSeparated(data.images);
     data.prompts = parseDoubleNewlineSeparated(data.prompts);
     data.is_hidden = data.is_hidden === 'true' || data.is_hidden === 'on' || data.is_hidden === true;
+    data.is_sell = data.is_sell === 'true' || data.is_sell === 'on' || data.is_sell === true;
+    data.price = parseFloat(data.price) || 0;
     if (!data.seo_description) data.seo_description = null;
     
     if (data.pack_id) {
