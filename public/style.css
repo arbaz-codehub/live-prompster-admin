@@ -514,3 +514,86 @@ textarea {
 .modal-btn-confirm:hover {
   filter: brightness(1.1);
 }
+
+/* Responsive Styles for Mobile Devices */
+@media (max-width: 768px) {
+  body {
+    padding: var(--space-4);
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: var(--space-4);
+    scrollbar-width: none; 
+  }
+
+  .tabs::-webkit-scrollbar { 
+    display: none; 
+  }
+  
+  .tab-btn {
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .panel {
+    padding: var(--space-4);
+  }
+
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .btn-add {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .data-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .data-item-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .btn-edit, .btn-delete {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .btn-cancel {
+    width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+  
+  .modal-btn {
+    width: 100%;
+  }
+}
