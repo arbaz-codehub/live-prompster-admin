@@ -5,6 +5,8 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 
 const app = express();
 const server = http.createServer(app);
@@ -185,20 +187,7 @@ const schemas = {
     user_id: { type: 'string', required: true },
     workshop_id: { type: 'string', required: true },
     order_id: { type: 'string', required: true },
-    status: { type: 'string', required: false },
-    created_at: { type: 'string', required: false }
-  },
-  workshops: {
-    id: { type: 'string', required: false },
-    slug: { type: 'string', required: true },
-    title: { type: 'string', required: true },
-    topic: { type: 'string', required: true },
-    scheduled_date: { type: 'string', required: true },
-    duration_minutes: { type: 'number', required: true },
-    format: { type: 'string', required: false },
-    eligibility: { type: 'string', required: false },
-    fee_amount: { type: 'number', required: true },
-    invite_link_or_venue: { type: 'string', required: true }
+    status: { type: 'string', required: false }
   }
 };
 
@@ -261,11 +250,7 @@ app.get('/api/data/:table', async (req, res) => {
   
   try {
     let query = supabase.from(table).select(select);
-    if (table !== 'workshops') {
-      query = query.order('created_at', { ascending: false });
-    } else {
-      query = query.order('scheduled_date', { ascending: false });
-    }
+    query = query.order('created_at', { ascending: false });
 
     const { data, error } = await query;
     if (error) throw error;
@@ -313,6 +298,37 @@ app.delete('/api/data/:table/:id', async (req, res) => {
     const { data, error } = await supabase.from(table).delete().eq('id', id);
     if (error) throw error;
     res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// --- EXPERIMENTAL FILE UPLOAD ---
+// Route: POST /api/experimental/upload
+app.post('/api/experimental/upload', authMiddleware, upload.single('file'), async (req, res) => {
+  try {
+    const file = req.file;
+    if (!file) return res.status(400).json({ error: 'No file provided' });
+
+    const folder = req.body.folder || 'uncategorized';
+    
+    const fileExt = file.originalname.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const bucketPath = `${folder}/${fileName}`;
+    const bucketName = 'images';
+
+    console.log(`[Upload] Uploading to bucket ${bucketName} at path: ${bucketPath}`);
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from(bucketName)
+      .upload(bucketPath, file.buffer, { contentType: file.mimetype, upsert: false });
+
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage.from(bucketName).getPublicUrl(bucketPath);
+
+    res.json({ success: true, url: publicUrl });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

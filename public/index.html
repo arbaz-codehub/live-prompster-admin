@@ -33,7 +33,6 @@
       <button class="tab-btn" data-tab="tools">Tools</button>
       <button class="tab-btn" data-tab="resources">Resources</button>
       <button class="tab-btn" data-tab="promo">Promo Banners</button>
-      <button class="tab-btn" data-tab="workshops">Workshops</button>
     </div>
 
     <!-- PROMPTS PANEL -->
@@ -51,8 +50,11 @@
       <div class="form-view hidden" id="form-view-prompts">
         <div class="form-header">
           <h2 id="form-title-prompts">Add Prompt</h2>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('prompts')" style="background: var(--color-primary); color: white;">Load JSON</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('prompts')" style="background: var(--color-primary); color: white;">Paste JSON</button>
+            <button type="button" class="btn-cancel" onclick="document.getElementById('upload-json-prompts').click()" style="background: var(--color-primary); color: white;">Upload JSON</button>
+            <input type="file" id="upload-json-prompts" accept=".json" style="display: none;" onchange="window.uploadJsonFile(event, 'prompts')">
+            <button type="button" class="btn-cancel" onclick="window.exportJsonPayload('prompts')" style="background: var(--color-surface-hover); color: var(--color-text);">Export JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('prompts')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('prompts')">Cancel</button>
           </div>
@@ -102,6 +104,7 @@
             <select id="prompt-category" name="category" required>
               <option value="">Loading categories...</option>
             </select>
+            <input type="text" id="prompt-new-category" placeholder="Type new category name..." style="display:none; margin-top: 8px;">
           </div>
 
           <div class="form-group">
@@ -109,9 +112,23 @@
             <input type="text" id="prompt-tags" name="tags" placeholder="cyberpunk, neon, rain">
           </div>
 
-          <div class="form-group">
+          <div class="form-group" style="border: 1px dashed var(--color-border); padding: 12px; border-radius: 8px;">
             <label for="prompt-images">Image URLs (One per line) <span class="tooltip-icon" data-tooltip="Paste high-res image URLs here. These populate the image carousel.">i</span></label>
             <textarea id="prompt-images" name="images" rows="4" required placeholder="https://..."></textarea>
+            <div class="upload-ui-container">
+              <div class="upload-ui-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Or Upload directly to Supabase (Appends)
+              </div>
+              <div class="upload-ui-controls">
+                <input type="file" id="prompt-images-file" accept="image/*" multiple>
+                <div class="folder-input-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  <input type="text" id="prompt-images-folder" placeholder="Folder" value="Gallery Images">
+                </div>
+                <button type="button" class="btn-upload" onclick="window.triggerImageUpload('prompt-images')">Upload & Add</button>
+              </div>
+            </div>
           </div>
 
           <div class="form-group">
@@ -120,8 +137,8 @@
           </div>
 
           <div class="form-group">
-            <label for="prompt-seo">SEO Description (Optional markdown) <span class="tooltip-icon" data-tooltip="The long-form description shown below the prompt. Supports basic formatting.">i</span></label>
-            <textarea id="prompt-seo" name="seo_description" rows="3" placeholder="SEO optimized description..."></textarea>
+            <label for="prompt-seo">"Why use this prompt?" Section <span class="tooltip-icon" data-tooltip="This appears under the 'Why use this prompt?' heading on the prompt page. Write plain text or use markdown bullet points. Do NOT include the heading itself — it's added automatically.">i</span></label>
+            <textarea id="prompt-seo" name="seo_description" rows="3" placeholder="Plain text or markdown bullets explaining why someone should use this prompt. Do NOT add a 'Why use this prompt?' heading — it's automatic."></textarea>
           </div>
 
           <button type="submit" class="btn" id="btn-submit-prompts">Save Prompt</button>
@@ -144,8 +161,11 @@
       <div class="form-view hidden" id="form-view-marketplace">
         <div class="form-header">
           <h2 id="form-title-marketplace">Add Pack</h2>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('marketplace')" style="background: var(--color-primary); color: white;">Load JSON</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('marketplace')" style="background: var(--color-primary); color: white;">Paste JSON</button>
+            <button type="button" class="btn-cancel" onclick="document.getElementById('upload-json-marketplace').click()" style="background: var(--color-primary); color: white;">Upload JSON</button>
+            <input type="file" id="upload-json-marketplace" accept=".json" style="display: none;" onchange="window.uploadJsonFile(event, 'marketplace')">
+            <button type="button" class="btn-cancel" onclick="window.exportJsonPayload('marketplace')" style="background: var(--color-surface-hover); color: var(--color-text);">Export JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('marketplace')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('marketplace')">Cancel</button>
           </div>
@@ -169,9 +189,23 @@
             <label for="pack-tag">Tag <span class="tooltip-icon" data-tooltip="The small badge text shown on the card. e.g. Prompt Pack">i</span></label>
             <input type="text" id="pack-tag" name="tag" value="Prompt Pack">
           </div>
-          <div class="form-group">
+          <div class="form-group" style="border: 1px dashed var(--color-border); padding: 12px; border-radius: 8px;">
             <label for="pack-image">Thumbnail Image URL <span class="tooltip-icon" data-tooltip="The main cover image for the pack. e.g. https://images.unsplash.com/photo-123">i</span></label>
             <input type="url" id="pack-image" name="image_url" required placeholder="https://...">
+            <div class="upload-ui-container">
+              <div class="upload-ui-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Or Upload directly to Supabase
+              </div>
+              <div class="upload-ui-controls">
+                <input type="file" id="pack-image-file" accept="image/*">
+                <div class="folder-input-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  <input type="text" id="pack-image-folder" placeholder="Folder" value="Marketplace Packs">
+                </div>
+                <button type="button" class="btn-upload" onclick="window.triggerImageUpload('pack-image')">Upload Image</button>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label for="pack-link">External Link <span class="tooltip-icon" data-tooltip="The checkout link (e.g. Gumroad). Acts as a fallback for older items.">i</span></label>
@@ -185,9 +219,23 @@
             <label for="pack-detailed-description">Detailed Description <span class="tooltip-icon" data-tooltip="The full sales copy shown on the pack's detail page. Supports multiple paragraphs.">i</span></label>
             <textarea id="pack-detailed-description" name="detailed_description" rows="4" placeholder="Full sales page text..."></textarea>
           </div>
-          <div class="form-group">
+          <div class="form-group" style="border: 1px dashed var(--color-border); padding: 12px; border-radius: 8px;">
             <label for="pack-screenshots">Screenshots <span class="tooltip-icon" data-tooltip="Add one image URL per line. These populate the screenshot carousel.">i</span></label>
             <textarea id="pack-screenshots" name="screenshots" rows="4" placeholder="https://..."></textarea>
+            <div class="upload-ui-container">
+              <div class="upload-ui-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Or Upload directly to Supabase (Appends)
+              </div>
+              <div class="upload-ui-controls">
+                <input type="file" id="pack-screenshots-file" accept="image/*" multiple>
+                <div class="folder-input-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  <input type="text" id="pack-screenshots-folder" placeholder="Folder" value="Marketplace Packs">
+                </div>
+                <button type="button" class="btn-upload" onclick="window.triggerImageUpload('pack-screenshots')">Upload & Add</button>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label for="pack-why-not-buy">Why Not Buy <span class="tooltip-icon" data-tooltip="Add one bullet point reason per line.">i</span></label>
@@ -220,8 +268,11 @@
       <div class="form-view hidden" id="form-view-tools">
         <div class="form-header">
           <h2 id="form-title-tools">Add Tool</h2>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('tools')" style="background: var(--color-primary); color: white;">Load JSON</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('tools')" style="background: var(--color-primary); color: white;">Paste JSON</button>
+            <button type="button" class="btn-cancel" onclick="document.getElementById('upload-json-tools').click()" style="background: var(--color-primary); color: white;">Upload JSON</button>
+            <input type="file" id="upload-json-tools" accept=".json" style="display: none;" onchange="window.uploadJsonFile(event, 'tools')">
+            <button type="button" class="btn-cancel" onclick="window.exportJsonPayload('tools')" style="background: var(--color-surface-hover); color: var(--color-text);">Export JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('tools')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('tools')">Cancel</button>
           </div>
@@ -241,9 +292,23 @@
             <label for="tool-tag">Tag <span class="tooltip-icon" data-tooltip="The category or badge text for the tool. e.g. Utility">i</span></label>
             <input type="text" id="tool-tag" name="tag" value="Utility">
           </div>
-          <div class="form-group">
+          <div class="form-group" style="border: 1px dashed var(--color-border); padding: 12px; border-radius: 8px;">
             <label for="tool-image">Image URL <span class="tooltip-icon" data-tooltip="The icon or thumbnail image URL for the tool.">i</span></label>
             <input type="url" id="tool-image" name="image_url" placeholder="https://...">
+            <div class="upload-ui-container">
+              <div class="upload-ui-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Or Upload directly to Supabase
+              </div>
+              <div class="upload-ui-controls">
+                <input type="file" id="tool-image-file" accept="image/*">
+                <div class="folder-input-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  <input type="text" id="tool-image-folder" placeholder="Folder" value="Tools Images">
+                </div>
+                <button type="button" class="btn-upload" onclick="window.triggerImageUpload('tool-image')">Upload Image</button>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label for="tool-link">External Link <span class="tooltip-icon" data-tooltip="The URL where users can access or buy the tool.">i</span></label>
@@ -276,8 +341,11 @@
       <div class="form-view hidden" id="form-view-resources">
         <div class="form-header">
           <h2 id="form-title-resources">Add Resource</h2>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('resources')" style="background: var(--color-primary); color: white;">Load JSON</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('resources')" style="background: var(--color-primary); color: white;">Paste JSON</button>
+            <button type="button" class="btn-cancel" onclick="document.getElementById('upload-json-resources').click()" style="background: var(--color-primary); color: white;">Upload JSON</button>
+            <input type="file" id="upload-json-resources" accept=".json" style="display: none;" onchange="window.uploadJsonFile(event, 'resources')">
+            <button type="button" class="btn-cancel" onclick="window.exportJsonPayload('resources')" style="background: var(--color-surface-hover); color: var(--color-text);">Export JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('resources')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('resources')">Cancel</button>
           </div>
@@ -309,9 +377,23 @@
             <label for="resource-count">Count Label <span class="tooltip-icon" data-tooltip="Badge indicating number of items. e.g. 24+ Tools">i</span></label>
             <input type="text" id="resource-count" name="count" placeholder="24+ Tools">
           </div>
-          <div class="form-group">
+          <div class="form-group" style="border: 1px dashed var(--color-border); padding: 12px; border-radius: 8px;">
             <label for="resource-image">Image URL <span class="tooltip-icon" data-tooltip="Cover or thumbnail image URL for the resource.">i</span></label>
             <input type="url" id="resource-image" name="image_url" placeholder="https://...">
+            <div class="upload-ui-container">
+              <div class="upload-ui-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Or Upload directly to Supabase
+              </div>
+              <div class="upload-ui-controls">
+                <input type="file" id="resource-image-file" accept="image/*">
+                <div class="folder-input-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  <input type="text" id="resource-image-folder" placeholder="Folder" value="Resource Images">
+                </div>
+                <button type="button" class="btn-upload" onclick="window.triggerImageUpload('resource-image')">Upload Image</button>
+              </div>
+            </div>
           </div>
           <button type="submit" class="btn" id="btn-submit-resources">Save Resource</button>
         </form>
@@ -333,43 +415,48 @@
       <div class="form-view hidden" id="form-view-promo">
         <div class="form-header">
           <h2 id="form-title-promo">Add Banner</h2>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('promo')" style="background: var(--color-primary); color: white;">Load JSON</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('promo')" style="background: var(--color-primary); color: white;">Paste JSON</button>
+            <button type="button" class="btn-cancel" onclick="document.getElementById('upload-json-promo').click()" style="background: var(--color-primary); color: white;">Upload JSON</button>
+            <input type="file" id="upload-json-promo" accept=".json" style="display: none;" onchange="window.uploadJsonFile(event, 'promo')">
+            <button type="button" class="btn-cancel" onclick="window.exportJsonPayload('promo')" style="background: var(--color-surface-hover); color: var(--color-text);">Export JSON</button>
             <button type="button" class="btn-cancel" onclick="window.fillDummyData('promo')" style="background: var(--color-surface-hover); color: var(--color-text);">Fill Dummy Data</button>
             <button type="button" class="btn-cancel" onclick="window.showList('promo')">Cancel</button>
           </div>
         </div>
         <form id="form-promo" data-table="promo_banners">
           <input type="hidden" name="id" id="promo-id">
-          
-          <div class="form-group">
-            <label for="promo-title">Banner Title</label>
-            <input type="text" id="promo-title" name="title" required>
-          </div>
-          <div class="form-group">
-            <label for="promo-image">Banner Image URL</label>
-            <input type="url" id="promo-image" name="image_url" required>
-          </div>
+
           <div class="form-group" id="promo-id-group">
-            <label for="promo-id">ID (slug) - Cannot be changed later <span class="tooltip-icon" data-tooltip="Unique identifier. Usually 'main-banner'.">i</span></label>
-            <input type="text" id="promo-id" name="id" required placeholder="e.g. main-banner">
+            <label for="promo-id-input">ID (slug) - Cannot be changed later <span class="tooltip-icon" data-tooltip="Unique identifier. Usually 'main-banner'.">i</span></label>
+            <input type="text" id="promo-id-input" name="id" required placeholder="e.g. main-banner">
           </div>
           
           <div class="form-group">
             <label for="promo-title">Title <span class="tooltip-icon" data-tooltip="e.g. 50% Off Master AI Portrait Prompts">i</span></label>
             <input type="text" id="promo-title" name="title" required placeholder="e.g. Summer Sale 50% Off">
           </div>
-          <div class="form-group">
-            <label for="promo-description">Description <span class="tooltip-icon" data-tooltip="A catchy description for the promo banner.">i</span></label>
-            <textarea id="promo-description" name="description" rows="2" required placeholder="Get the premium pack..."></textarea>
+          <div class="form-group" style="border: 1px dashed var(--color-border); padding: 12px; border-radius: 8px;">
+            <label for="promo-image">Banner Image URL</label>
+            <input type="url" id="promo-image" name="image_url" required>
+            <div class="upload-ui-container">
+              <div class="upload-ui-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Or Upload directly to Supabase
+              </div>
+              <div class="upload-ui-controls">
+                <input type="file" id="promo-image-file" accept="image/*">
+                <div class="folder-input-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  <input type="text" id="promo-image-folder" placeholder="Folder" value="Promo Banners">
+                </div>
+                <button type="button" class="btn-upload" onclick="window.triggerImageUpload('promo-image')">Upload Banner</button>
+              </div>
+            </div>
           </div>
           <div class="form-group">
-            <label for="promo-button-text">Button Text <span class="tooltip-icon" data-tooltip="e.g. Claim Discount">i</span></label>
-            <input type="text" id="promo-button-text" name="button_text" placeholder="e.g. Claim Offer">
-          </div>
-          <div class="form-group">
-            <label for="promo-link">Link <span class="tooltip-icon" data-tooltip="Where the promo banner should direct the user.">i</span></label>
-            <input type="url" id="promo-link" name="link" required placeholder="https://...">
+            <label for="promo-target-url">Target URL <span class="tooltip-icon" data-tooltip="Where the promo banner should direct the user when clicked.">i</span></label>
+            <input type="url" id="promo-target-url" name="target_url" required placeholder="https://...">
           </div>
           <div class="form-group">
             <label for="promo-is-active">Is Active <span class="tooltip-icon" data-tooltip="Check to show this promo banner on the site.">i</span></label>
@@ -382,67 +469,6 @@
         </form>
       </div>
     </div>
-
-    <!-- WORKSHOPS PANEL -->
-    <div id="panel-workshops" class="panel">
-      <div class="list-view" id="list-view-workshops">
-        <div class="list-header">
-          <h2>Manage Workshops</h2>
-          <button class="btn-add" onclick="window.showForm('workshops')">+ Add New</button>
-        </div>
-        <ul class="data-list" id="list-workshops">
-          <div class="empty-state">Loading...</div>
-        </ul>
-      </div>
-
-      <div class="form-view hidden" id="form-view-workshops">
-        <div class="form-header">
-          <h2 id="form-title-workshops">Add Workshop</h2>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn-cancel" onclick="window.loadJsonPayload('workshops')" style="background: var(--color-primary); color: white;">Load JSON</button>
-            <button class="btn-cancel" onclick="window.showList('workshops')">Cancel</button>
-          </div>
-        </div>
-        <form id="form-workshops" data-table="workshops">
-          <input type="hidden" name="id" id="workshop-id">
-          
-          <div class="form-group">
-            <label for="workshop-title">Title</label>
-            <input type="text" id="workshop-title" name="title" required>
-          </div>
-          <div class="form-group">
-            <label for="workshop-topic">Topic</label>
-            <input type="text" id="workshop-topic" name="topic" required>
-          </div>
-          <div class="form-group">
-            <label for="workshop-date">Scheduled Date & Time (ISO format)</label>
-            <input type="text" id="workshop-date" name="scheduled_date" required placeholder="YYYY-MM-DDTHH:MM:SSZ">
-          </div>
-          <div class="form-group">
-            <label for="workshop-duration">Duration (Minutes)</label>
-            <input type="number" id="workshop-duration" name="duration_minutes" required>
-          </div>
-          <div class="form-group">
-            <label for="workshop-format">Format</label>
-            <input type="text" id="workshop-format" name="format">
-          </div>
-          <div class="form-group">
-            <label for="workshop-eligibility">Eligibility</label>
-            <input type="text" id="workshop-eligibility" name="eligibility">
-          </div>
-          <div class="form-group">
-            <label for="workshop-fee">Fee Amount</label>
-            <input type="number" step="0.01" id="workshop-fee" name="fee_amount" required>
-          </div>
-          <div class="form-group">
-            <label for="workshop-invite">Invite Link or Venue</label>
-            <input type="text" id="workshop-invite" name="invite_link_or_venue" required>
-          </div>
-          <button type="submit" class="btn" id="btn-submit-workshops">Save Workshop</button>
-        </form>
-      </div>
-    </div>
-
   </div>
 
   <div id="toast">Message goes here</div>

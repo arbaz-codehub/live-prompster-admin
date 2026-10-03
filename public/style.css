@@ -597,3 +597,124 @@ textarea {
     width: 100%;
   }
 }
+
+/* --- Beautiful Upload UI --- */
+.upload-ui-container {
+  margin-top: 16px;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+}
+
+.upload-ui-container:hover {
+  border-color: var(--color-primary);
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.upload-ui-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.upload-ui-header svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-primary);
+}
+
+.upload-ui-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Beautiful Native File Input */
+.upload-ui-controls input[type="file"] {
+  flex: 1;
+  min-width: 200px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-ui-controls input[type="file"]:hover {
+  border-color: var(--color-text-muted);
+}
+
+.upload-ui-controls input[type="file"]::file-selector-button {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-right: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.upload-ui-controls input[type="file"]::file-selector-button:hover {
+  background: var(--color-border);
+}
+
+.folder-input-wrapper {
+  flex: 1;
+  min-width: 150px;
+  position: relative;
+}
+
+.folder-input-wrapper input {
+  padding-left: 36px;
+  background: var(--color-bg);
+}
+
+.folder-input-wrapper svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.btn-upload {
+  background: var(--color-success);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-upload:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.btn-upload:active {
+  transform: translateY(0);
+}
